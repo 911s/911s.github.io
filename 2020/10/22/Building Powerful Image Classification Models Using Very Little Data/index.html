@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+    <!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+  
+  <title>垃圾堆</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+<meta name="generator" content="Hexo 5.2.0"></head>
+    <body>
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">Blog</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/friends">Friends</a>
+            
+            
+            
+            <a class="nav-item" href="/projects">Projects</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/MrWillCom" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-codepen nav-item-icon" href="https://codepen.io/mrwillcom" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-patreon nav-item-icon" href="https://www.patreon.com/MrWillCom" target="_blank">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        <article class="post">
+    <div class="meta">
+        
+        <div class="date" id="date">
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <span>October</span>
+            
+            
+            
+            <span>22,</span>
+            <span>2020</span>
+        </div>
+        
+
+        <h2 class="title"></h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <hr>
+<h2 id="Building-Powerful-Image-Classification-Models-Using-Very-Little-Data"><a href="#Building-Powerful-Image-Classification-Models-Using-Very-Little-Data" class="headerlink" title="Building Powerful Image Classification Models Using Very Little Data"></a>Building Powerful Image Classification Models Using Very Little Data</h2><p>This is a very old version, introduced by <a target="_blank" rel="noopener" href="https://twitter.com/fchollet"><em>Francois Chollet</em></a> on 05 June 2016. <a target="_blank" rel="noopener" href="https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html"><em>This</em></a> is the orignal pages.</p>
+<p>The dataset is come from Kaggle’s <a target="_blank" rel="noopener" href="https://www.kaggle.com/c/dogs-vs-cats/data"><em>Dog vs. Cats</em></a> competition. The traing archive contains 25,000 images of dogs and cats (1 = dog, 0 = cat), and we will use only 1000 cats and 1000 dogs (<em>the first 1,000 images for each class</em>) to training our model, and 400 additional samples from each class as validation data, to evaluate the models.</p>
+<p><strong>Deep learing requires the ability to learn features automatically from the data</strong></p>
+<h2 id="Environment-Preperation"><a href="#Environment-Preperation" class="headerlink" title="Environment Preperation"></a>Environment Preperation</h2><blockquote>
+<p>Language: Python</p>
+<p>Library: Keras, SciPy, PIL</p>
+</blockquote>
+<h2 id="Data-Pre-processing-and-Data-Augmentation"><a href="#Data-Pre-processing-and-Data-Augmentation" class="headerlink" title="Data Pre-processing and Data Augmentation"></a>Data Pre-processing and Data Augmentation</h2><p>We can do some process to the image like randomly rotate pictures, randomly applying shearing transformations, etc to generate new features by <code>ImageDataGenerator </code> class. Like the following:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> keras_preprocessing.image <span class="keyword">import</span> ImageDataGenerator, array_to_img, img_to_array, load_img</span><br><span class="line"></span><br><span class="line">datagen = ImageDataGenerator(</span><br><span class="line">        rotation_range=<span class="number">40</span>, <span class="comment"># （0, 180) a range within which to randomly rotate pictures</span></span><br><span class="line">        width_shift_range=<span class="number">0.2</span>,</span><br><span class="line">        height_shift_range=<span class="number">0.2</span>,</span><br><span class="line">        rescale=<span class="number">1.</span>/<span class="number">255</span>,</span><br><span class="line">        shear_range=<span class="number">0.2</span>, <span class="comment"># randomly applying shearing transformations</span></span><br><span class="line">        zoom_range=<span class="number">0.2</span>, <span class="comment"># randomly zooming inside pictures</span></span><br><span class="line">        horizontal_flip=<span class="literal">True</span>, <span class="comment"># randomly flipping half of the images horizontally</span></span><br><span class="line">        fill_mode=<span class="string">&#x27;nearest&#x27;</span>)</span><br><span class="line"></span><br><span class="line">img = load_img(<span class="string">&#x27;./cat_dog_kaggle/train/cat.0.jpg&#x27;</span>) <span class="comment"># This is a PIL image</span></span><br><span class="line">x = img_to_array(img) <span class="comment"># This is a Numpy array with shape (3, 150, 150)</span></span><br><span class="line">x = x.reshape((<span class="number">1</span>,) + x.shape) <span class="comment"># This is a Numpy array with shape (1, 3, 150, 150)</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># the .flow() command below generates batches of randomly transformed images</span></span><br><span class="line"><span class="comment"># and saves the results to the `preview` directory</span></span><br><span class="line">i = <span class="number">0</span> </span><br><span class="line"><span class="keyword">for</span> batch <span class="keyword">in</span> datagen.flow(x, batch_size=<span class="number">1</span>, save_to_dir=<span class="string">&#x27;./cat_dog_kaggle/preview/&#x27;</span>, save_prefix=<span class="string">&#x27;cat&#x27;</span>, save_format=<span class="string">&#x27;jpeg&#x27;</span>):</span><br><span class="line">    i += <span class="number">1</span></span><br><span class="line">    <span class="keyword">if</span> i &gt; <span class="number">20</span>:</span><br><span class="line">        <span class="keyword">break</span></span><br></pre></td></tr></table></figure>
+
+<p> Output:</p>
+<p><img src="https://s1.ax1x.com/2020/10/22/BPXMQg.png" alt="after-datagen">·</p>
+<h2 id="Training-a-Small-Convnet-from-Scratch"><a href="#Training-a-Small-Convnet-from-Scratch" class="headerlink" title="Training a Small Convnet from Scratch"></a>Training a Small Convnet from Scratch</h2><p>Because there are very few examples, our number one concern should be <strong>overfitting</strong>. </p>
+<h3 id="How-to-fight-overfitting"><a href="#How-to-fight-overfitting" class="headerlink" title="How to fight overfitting?"></a>How to fight overfitting?</h3><ol>
+<li><p><strong>Data augmentation</strong> is one way to fight overfitting   =&gt;  not enough  =&gt;  augmented samples are still highly correlated.</p>
+</li>
+<li><p>Entropic capacity of the model – <em>How much information your model is allowed to store.</em></p>
+<ul>
+<li><p>Choice of the number of parameters in the model</p>
+<p>e.g. the number of layers and the size of each layer</p>
+</li>
+<li><p>Use of weight regularization</p>
+<p>e.g. L1 or L2 regularization =&gt; forcing model weights to taker smaller values</p>
+</li>
+</ul>
+</li>
+<li><p>Dropout =&gt; preventing a layer from seeing twice the exact same pattern</p>
+</li>
+</ol>
+<p><strong>Both dropout and data augmentation tend to disrupt random correlations occuring in your data.</strong></p>
+<p>We can use the generators to train our model. But each epoch takes about 30s on CPU or 15s on GPU.</p>
+<p>And after 50 epoch, about 25mins, we get a model with 0.8355 of accuracy.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> tensorflow.keras.models <span class="keyword">import</span> Sequential</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.preprocessing.image <span class="keyword">import</span> ImageDataGenerator</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.layers <span class="keyword">import</span> Conv2D, MaxPooling2D, Dense, Flatten, Dropout, Activation</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras <span class="keyword">import</span> backend <span class="keyword">as</span> K</span><br><span class="line"></span><br><span class="line"><span class="comment"># dimensions of our images.</span></span><br><span class="line">img_width, img_height = <span class="number">150</span>, <span class="number">150</span></span><br><span class="line"></span><br><span class="line">train_data_dir = <span class="string">&#x27;dataset/dogs-vs-cats/first_try/train&#x27;</span></span><br><span class="line">validation_data_dir = <span class="string">&#x27;dataset/dogs-vs-cats/first_try/validation&#x27;</span></span><br><span class="line">nb_train_samples = <span class="number">2000</span></span><br><span class="line">nb_validation_samples = <span class="number">800</span></span><br><span class="line">epochs = <span class="number">50</span></span><br><span class="line">batch_size = <span class="number">16</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> K.image_data_format() == <span class="string">&#x27;channels_first&#x27;</span>:</span><br><span class="line">    input_shape = (<span class="number">3</span>, img_width, img_height)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    input_shape = (img_width, img_height, <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">model = Sequential()</span><br><span class="line">model.add(Conv2D(<span class="number">32</span>, (<span class="number">3</span>, <span class="number">3</span>), input_shape=input_shape))</span><br><span class="line">model.add(Activation(<span class="string">&#x27;relu&#x27;</span>))</span><br><span class="line">model.add(MaxPooling2D(pool_size=(<span class="number">2</span>, <span class="number">2</span>)))</span><br><span class="line"></span><br><span class="line">model.add(Conv2D(<span class="number">32</span>, (<span class="number">3</span>, <span class="number">3</span>)))</span><br><span class="line">model.add(Activation(<span class="string">&#x27;relu&#x27;</span>))</span><br><span class="line">model.add(MaxPooling2D(pool_size=(<span class="number">2</span>, <span class="number">2</span>)))</span><br><span class="line"></span><br><span class="line">model.add(Conv2D(<span class="number">64</span>, (<span class="number">3</span>, <span class="number">3</span>)))</span><br><span class="line">model.add(Activation(<span class="string">&#x27;relu&#x27;</span>))</span><br><span class="line">model.add(MaxPooling2D(pool_size=(<span class="number">2</span>, <span class="number">2</span>)))</span><br><span class="line"></span><br><span class="line"><span class="comment"># the model so far outputs 3D feature maps (height, width, features)</span></span><br><span class="line">model.add(Flatten())  <span class="comment"># this converts our 3D feature maps to 1D feature vectors</span></span><br><span class="line">model.add(Dense(<span class="number">64</span>))</span><br><span class="line">model.add(Activation(<span class="string">&#x27;relu&#x27;</span>))</span><br><span class="line">model.add(Dropout(<span class="number">0.5</span>))</span><br><span class="line">model.add(Dense(<span class="number">1</span>))</span><br><span class="line">model.add(Activation(<span class="string">&#x27;sigmoid&#x27;</span>))</span><br><span class="line"></span><br><span class="line">model.<span class="built_in">compile</span>(loss=<span class="string">&#x27;binary_crossentropy&#x27;</span>,</span><br><span class="line">              optimizer=<span class="string">&#x27;rmsprop&#x27;</span>,</span><br><span class="line">              metrics=[<span class="string">&#x27;accuracy&#x27;</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># batch_size = 16</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># this is the augmentation configuration we will use for training</span></span><br><span class="line">train_datagen = ImageDataGenerator(</span><br><span class="line">    rescale=<span class="number">1.</span> / <span class="number">255</span>,</span><br><span class="line">    shear_range=<span class="number">0.2</span>,</span><br><span class="line">    zoom_range=<span class="number">0.2</span>,</span><br><span class="line">    horizontal_flip=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># this is the augmentation configuration we will use for testing</span></span><br><span class="line"><span class="comment"># only rescaling</span></span><br><span class="line">test_datagen = ImageDataGenerator(rescale=<span class="number">1.</span>/<span class="number">255</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># this is a generator that will read pictures found in subfolers of &#x27;data/train&#x27;,</span></span><br><span class="line"><span class="comment"># and indefinittly generate batches of augmented image data</span></span><br><span class="line">train_generator = train_datagen.flow_from_directory(</span><br><span class="line">    train_data_dir,  <span class="comment"># this is the target directory</span></span><br><span class="line">    target_size = (img_width, img_height),  <span class="comment"># all images will be resized to 150*150</span></span><br><span class="line">    batch_size = batch_size,</span><br><span class="line">    class_mode = <span class="string">&#x27;binary&#x27;</span>)  <span class="comment"># since we use binary_crossentropy loss, we need binary labels</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># this is a similar generator, for validation data</span></span><br><span class="line">validation_generator = test_datagen.flow_from_directory(</span><br><span class="line">    validation_data_dir,  <span class="comment"># this is the target directory</span></span><br><span class="line">    target_size = (img_width, img_height),  <span class="comment"># all images will be resized to 150*150</span></span><br><span class="line">    batch_size = batch_size,</span><br><span class="line">    class_mode = <span class="string">&#x27;binary&#x27;</span>) </span><br><span class="line"></span><br><span class="line">model.fit_generator(</span><br><span class="line">    train_generator,</span><br><span class="line">    steps_per_epoch = nb_train_samples // batch_size,</span><br><span class="line">    epochs = epochs,</span><br><span class="line">    validation_data = validation_generator,</span><br><span class="line">    validation_steps = nb_validation_samples // batch_size)</span><br><span class="line">model.save_weights(<span class="string">&#x27;little_data_classification_first_try.h5&#x27;</span>)  <span class="comment"># always save your weights after training or during training</span></span><br></pre></td></tr></table></figure>
+
+<p>Output:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">Found 2000 images belonging to 2 classes.</span><br><span class="line">Found 802 images belonging to 2 classes.</span><br><span class="line">WARNING:tensorflow:From &lt;ipython-input-1-a42e54dc7b7a&gt;:75: Model.fit_generator (from tensorflow.python.keras.engine.training) is deprecated and will be removed in a future version.</span><br><span class="line">Instructions for updating:</span><br><span class="line">Please use Model.fit, which supports generators.</span><br><span class="line">Epoch 1&#x2F;50</span><br><span class="line">125&#x2F;125 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 30s 239ms&#x2F;step - loss: 0.7125 - accuracy: 0.5320 - val_loss: 0.7003 - val_accuracy: 0.4988</span><br><span class="line">Epoch 2&#x2F;50</span><br><span class="line">125&#x2F;125 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 33s 266ms&#x2F;step - loss: 0.6862 - accuracy: 0.5955 - val_loss: 0.6396 - val_accuracy: 0.6300</span><br><span class="line">Epoch 3&#x2F;50</span><br><span class="line">125&#x2F;125 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 31s 250ms&#x2F;step - loss: 0.6346 - accuracy: 0.6420 - val_loss: 0.6166 - val_accuracy: 0.6300</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">Epoch 49&#x2F;50</span><br><span class="line">125&#x2F;125 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 32s 254ms&#x2F;step - loss: 0.4207 - accuracy: 0.8195 - val_loss: 0.8108 - val_accuracy: 0.7613</span><br><span class="line">Epoch 50&#x2F;50</span><br><span class="line">125&#x2F;125 [&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;] - 30s 240ms&#x2F;step - loss: 0.3950 - accuracy: 0.8355 - val_loss: 0.5716 - val_accuracy: 0.7650</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Using-the-bottleneck-features-of-a-pre-trained-network"><a href="#Using-the-bottleneck-features-of-a-pre-trained-network" class="headerlink" title="Using the bottleneck features of a pre-trained network"></a>Using the bottleneck features of a pre-trained network</h2><p><strong>Pre-trained network</strong> =&gt; already learned features that are useful for most computer vision problems</p>
+<p>Next, we will use the <strong>VGG16</strong> architecture, pre-trained on the ImageNet dataset</p>
+<p>Here’s what the VGG16 architecture looks like:</p>
+<p><img src="https://blog.keras.io/img/imgclf/vgg16_original.png"></p>
+<p><strong><em>we are storing the features offline rather than adding our fully-connected model directly on top of a frozen convolutional base and running the whole thing</em></strong></p>
+<p>Running VGG16 is <strong>expensive</strong>, especially if you’re working on CPU, and we want to only do it once.</p>
+<h2 id="Fine-tuning-the-Top-Layers-of-a-Pre-trained-Network"><a href="#Fine-tuning-the-Top-Layers-of-a-Pre-trained-Network" class="headerlink" title="Fine-tuning the Top Layers of a Pre-trained Network"></a>Fine-tuning the Top Layers of a Pre-trained Network</h2><p> Fine-tuning consist in starting from a trained network, then re-training it on a new dataset using very small weight updates.</p>
+<p>Steps:</p>
+<ol>
+<li>instantiate the convolutional base of VGG16 and load its weights</li>
+<li>add our previously defined fully-connected model on top, and load its weights</li>
+<li>freeze the layers of the VGG16 model up to the last convolutional block</li>
+</ol>
+<p><img src="https://blog.keras.io/img/imgclf/vgg16_modified.png"></p>
+<p>Notes:</p>
+<ul>
+<li>in order to perform fine-tuning, all layers should <strong>start with properly trained weights</strong>: for instance you should <strong>not slap a randomly initialized fully-connected network</strong> on top of a pre-trained convolutional base. This is because the <strong>large gradient updates triggered by the randomly initialized weights would wreck the learned weights in the convolutional base</strong>.</li>
+<li>we choose to <strong>only fine-tune the last convolutional block</strong> rather than the entire network in order to prevent overfitting, since the entire network would have a very large entropic capacity and thus a strong tendency to overfit.The features learned by low-level convolutional blocks are more general, less abstract than those found higher-up.</li>
+<li>fine-tuning should be done with a very slow learning rate, and typically with the <strong>SGD optimizer</strong> rather than an adaptative learning rate optimizer such as RMSProp. This is <strong>to make sure that the magnitude of the updates stays very small</strong>, so as <strong>not to wreck the previously learned features</strong>.</li>
+</ul>
+<p>Some way to do it better:</p>
+<ul>
+<li>more aggresive data augmentation</li>
+<li>more aggressive dropout</li>
+<li>use of L1 and L2 regularization (also known as “weight decay”)</li>
+<li>fine-tuning one more convolutional block (alongside greater regularization)</li>
+</ul>
+
+    </div>
+
+    <div class="about">
+        <h1>About this Post</h1>
+        <p>This post is written by Zhijin Wu | 小垃圾, licensed under <a
+                target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</p>
+    </div>
+</article>
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+            <div class="group">
+                <h4 class="title">Blog</h4>
+                
+                <a href="/" class="item" target="_blank">Blog</a>
+                
+                <a href="/archives" class="item" target="_blank">Archives</a>
+                
+                <a href="/friends" class="item" target="_blank">Friends</a>
+                
+                <a href="/projects" class="item" target="_blank">Projects</a>
+                
+                <a href="/about" class="item" target="_blank">About</a>
+                
+                <a href="/atom.xml" class="item" target="_blank">RSS</a>
+                
+            </div>
+            
+            <div class="group">
+                <h4 class="title">Projects</h4>
+                
+                <a href="https://github.com/transmister" class="item" target="_blank">Transmister</a>
+                
+                <a href="https://github.com/MrWillCom/css-and-js-windows-uwp-xaml-controls" class="item" target="_blank">CSS&amp;JS Windows UWP XAML Controls</a>
+                
+                <a href="https://github.com/MrWillCom/hexo-theme-cupertino" class="item" target="_blank">Theme Cupertino</a>
+                
+                <a href="https://github.com/MrWillCom/github-dark-mode" class="item" target="_blank">GitHub Dark Mode</a>
+                
+            </div>
+            
+            <div class="group">
+                <h4 class="title">Me</h4>
+                
+                <a href="https://github.com/MrWillCom" class="item" target="_blank">GitHub</a>
+                
+                <a href="https://codepen.io/mrwillcom" class="item" target="_blank">CodePen</a>
+                
+                <a href="https://www.patreon.com/MrWillCom" class="item" target="_blank">Patreon</a>
+                
+                <a href="mailto:mr.will.com@outlook.com" class="item" target="_blank">Email</a>
+                
+            </div>
+            
+        </div>
+        &copy; 2020 Zhijin Wu | 小垃圾<br />
+        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+</footer>
+
+        
+<script src="/js/main.js"></script>
+
+    </body>
+</html>
