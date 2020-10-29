@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+    <!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+  
+  <title>Introduction to Unsupervised Deep Learning - 垃圾堆</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+<meta name="generator" content="Hexo 5.2.0"></head>
+    <body>
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">Blog</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/friends">Friends</a>
+            
+            
+            
+            <a class="nav-item" href="/projects">Projects</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/MrWillCom" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-codepen nav-item-icon" href="https://codepen.io/mrwillcom" target="_blank">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-patreon nav-item-icon" href="https://www.patreon.com/MrWillCom" target="_blank">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        <article class="post">
+    <div class="meta">
+        
+        <div class="date" id="date">
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <span>October</span>
+            
+            
+            
+            <span>25,</span>
+            <span>2020</span>
+        </div>
+        
+
+        <h2 class="title">Introduction to Unsupervised Deep Learning</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h2 id="Why-Unsupervised-Learning"><a href="#Why-Unsupervised-Learning" class="headerlink" title="Why Unsupervised Learning?"></a>Why Unsupervised Learning?</h2><p>As we all know we have two classicial types of machine learning – Supervised Learning and Unsupervised Learning. </p>
+<p>In the supervised learning we gives a structure for soloving a  problem, but it limits the potential of that algorithm in two ways:</p>
+<ul>
+<li>It is bound by the biases in which it is being supervised in.</li>
+<li>A huge manual effiort involved in creating the labels for our algorithm.</li>
+</ul>
+<p>Unsupervised learning algorithms derive insights directly from the data itself, and work as summarizing the data or grouping it. =&gt; <strong><em>data-driven way</em></strong></p>
+<h2 id="Case-Study-of-Unsupervised-Deep-Learning"><a href="#Case-Study-of-Unsupervised-Deep-Learning" class="headerlink" title="Case Study of Unsupervised Deep Learning"></a>Case Study of Unsupervised Deep Learning</h2><p>This case study is about unsupervised learning on <strong>unstructured data</strong>.</p>
+<h3 id="Problem-How-to-Organize-a-Photo-Gallery"><a href="#Problem-How-to-Organize-a-Photo-Gallery" class="headerlink" title="Problem - How to Organize a Photo Gallery?"></a>Problem - How to Organize a Photo Gallery?</h3><p>We have many photos in our phone, they are might be memes, interesting quotes / shares, meetings photos, screenshots, “private &amp; personal” images, posts, and so on.</p>
+<h3 id="Approach-1-Arrange-on-the-basis-of-time"><a href="#Approach-1-Arrange-on-the-basis-of-time" class="headerlink" title="Approach 1 - Arrange on the basis of time"></a>Approach 1 - Arrange on the basis of time</h3><p>The upside of this will be that all the events that happened on that day will be stored together.</p>
+<p>The downside of this approach is that it is too generic.</p>
+<h3 id="Approach-2-Arrange-on-the-basis-of-location"><a href="#Approach-2-Arrange-on-the-basis-of-location" class="headerlink" title="Approach 2 - Arrange on the basis of location"></a>Approach 2 - Arrange on the basis of location</h3><p>The downside of this approach is the simplistic idea on which it was created.</p>
+<p>=&gt; How can we define the location of a meme, or a cartoon.</p>
+<h3 id="Approach-3-Extract-Semantic-meaning-from-the-image-and-use-it-to-define-my-colleciton"><a href="#Approach-3-Extract-Semantic-meaning-from-the-image-and-use-it-to-define-my-colleciton" class="headerlink" title="Approach 3 - Extract Semantic meaning from the image and use it to define my colleciton"></a>Approach 3 - Extract Semantic meaning from the image and use it to define my colleciton</h3><p><strong>What should extract from image?</strong></p>
+<ol>
+<li>Is the captured image of a <strong>natural scene</strong> or is it an <strong>artificially generated</strong> image?</li>
+<li>Is there <strong>textual material</strong> in the photograph? If there is – can we identify what it is?</li>
+<li>What are the <strong>different kinds of objects present</strong> in the photograph? Do they combine to define the aesthetics of the image?</li>
+<li>Are there <strong>people present</strong> in the photograph? Can we recognize them?</li>
+<li>Are there <strong>similar images on the web</strong> which can help us identify the context of the image?</li>
+</ol>
+<p>We can use a deep learning architecture called <strong>Auto Encoders.</strong></p>
+<p>The idea behind using this algorithm is that you are <strong>training it to recreate</strong> what <strong>it just learnt</strong>. But the catch is that it has to <strong>use a much smaller representation phase to recreate it</strong>.</p>
+<p>For example, an Auto Encoder with encoding set to 10 is trained on images of cats, each of size 100×100. So the input dimension is 10,000, and the Auto Encoder has to represent all this information in a vector of size 10 (as seen in the image below).</p>
+<img src="https://cdn.analyticsvidhya.com/wp-content/uploads/2018/05/autoenc.png" alt="inline" style="zoom:80%;" />
+
+<p>Auto Encoder</p>
+<ol>
+<li><p>An encoder</p>
+<p>Convert the input to a lower dimensional representation</p>
+</li>
+<li><p>a decoder</p>
+<p>Recreate the input from this lower dimensional representation</p>
+</li>
+</ol>
+<h2 id="Code-Walkthrough-of-Unsupervised-Deep-Learning-on-MNIST-data"><a href="#Code-Walkthrough-of-Unsupervised-Deep-Learning-on-MNIST-data" class="headerlink" title="Code Walkthrough of Unsupervised Deep Learning on MNIST data"></a>Code Walkthrough of Unsupervised Deep Learning on MNIST data</h2><p>The original problem statement is to identify individual digits from an image.</p>
+<p>In this case, we will try to <strong><em>figure out which of the images are similar to each other and cluster them into groups.</em></strong></p>
+<p>We will perform three Unsupervised Learning techniques and check their performance, namely:</p>
+<ol>
+<li>KMeans directly on image</li>
+<li>KMeans + Autoencoder (a simple deep learning architecture)</li>
+<li>Deep Embedded Clustering algorithm (advanced deep learning)</li>
+</ol>
+<p>We need the following library</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> tensorflow <span class="keyword">import</span> keras</span><br><span class="line"><span class="keyword">import</span> metrics</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras <span class="keyword">import</span> backend <span class="keyword">as</span> K</span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras <span class="keyword">import</span> callbacks</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.models <span class="keyword">import</span> Model</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.optimizers <span class="keyword">import</span> SGD</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.layers <span class="keyword">import</span> Dense, Input, Layer, InputSpec</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.initializers <span class="keyword">import</span> VarianceScaling</span><br><span class="line"><span class="keyword">from</span> matplotlib.pyplot <span class="keyword">import</span> imread</span><br><span class="line"><span class="keyword">from</span> sklearn.cluster <span class="keyword">import</span> KMeans</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> accuracy_score, normalized_mutual_info_score</span><br><span class="line"><span class="keyword">import</span> mnist</span><br></pre></td></tr></table></figure>
+
+<p>Then, Prepared our data</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Set a seed value to restrict randomness</span></span><br><span class="line"><span class="comment"># Top stop potential randomness</span></span><br><span class="line">seed = <span class="number">128</span> </span><br><span class="line">rng = np.random.RandomState(seed)</span><br><span class="line"></span><br><span class="line"><span class="comment"># preparingt the data</span></span><br><span class="line">train_images = mnist.train_images()</span><br><span class="line">train_labels = mnist.train_labels()</span><br><span class="line">test_images = mnist.test_images()</span><br><span class="line">test_labels = mnist.test_labels()</span><br><span class="line"></span><br><span class="line"><span class="comment"># Normalize thje images </span></span><br><span class="line">train_images = (train_images / <span class="number">255</span>)</span><br><span class="line">test_images = (test_images / <span class="number">255</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Flatten the images</span></span><br><span class="line">train_images = train_images.reshape((<span class="number">-1</span>, <span class="number">784</span>))</span><br><span class="line">test_images = test_images.reshape((<span class="number">-1</span>, <span class="number">784</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># divide our data into train and validation set</span></span><br><span class="line">split_size = <span class="built_in">int</span>(train_images.shape[<span class="number">0</span>]*<span class="number">0.7</span>)</span><br><span class="line"></span><br><span class="line">train_images, val_images = train_images[:split_size], train_images[split_size:]</span><br><span class="line">train_labels, val_labels = train_labels[:split_size], train_labels[split_size:]</span><br></pre></td></tr></table></figure>
+
+<h3 id="Apply-K-Means-and-Divide-it-into-10-Clusters"><a href="#Apply-K-Means-and-Divide-it-into-10-Clusters" class="headerlink" title="Apply K-Means and Divide it into 10 Clusters"></a>Apply K-Means and Divide it into 10 Clusters</h3><p>Build KMeans model and use <code>train_images</code> data to train it.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">km = KMeans(n_jobs=<span class="number">-1</span>, n_clusters=<span class="number">10</span>, n_init=<span class="number">20</span>)</span><br><span class="line">km.fit(train_images)</span><br><span class="line">KMeans(algorithm=<span class="string">&#x27;auto&#x27;</span>, copy_x=<span class="literal">True</span>, init=<span class="string">&#x27;k-means++&#x27;</span>, max_iter=<span class="number">300</span>, n_clusters=<span class="number">10</span>, n_init=<span class="number">20</span>,</span><br><span class="line">      n_jobs=<span class="number">-1</span>, precompute_distances=<span class="string">&#x27;auto&#x27;</span>, random_state=<span class="literal">None</span>, tol=<span class="number">0.0001</span>, verbose=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<p>We use Normalized Mutual Information (NMI) score to evaluate our model.</p>
+<p>Mutal information is a symmetric measure for the degree of dependency between the clustering and the manual classification.</p>
+<p>In one word, <strong>NMI values close to 1 means good!!</strong></p>
+<p><img src="https://cdn.analyticsvidhya.com/wp-content/uploads/2018/04/data-mining-an-introduction-69-638.jpg"></p>
+<p><code>normalized_mutual_info_score(val_labels, pred)</code></p>
+<p>outout: <code>0.4903296660472791</code></p>
+<h3 id="KMeans-Autoencoder"><a href="#KMeans-Autoencoder" class="headerlink" title="KMeans + Autoencoder"></a>KMeans + Autoencoder</h3><p>Use an autoencoder to decrease the dimensionality of the data and extract useful information, then pass on the information to the K-Means algorithm.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># this is our input placeholder</span></span><br><span class="line">input_images = Input(shape=(<span class="number">784</span>,))</span><br><span class="line"></span><br><span class="line"><span class="comment"># &quot;encoded&quot; is the encoded representation of the input</span></span><br><span class="line">encoded = Dense(<span class="number">500</span>, activation=<span class="string">&#x27;relu&#x27;</span>)(input_images)</span><br><span class="line">encoded = Dense(<span class="number">500</span>, activation=<span class="string">&#x27;relu&#x27;</span>)(encoded)</span><br><span class="line">encoded = Dense(<span class="number">2000</span>, activation=<span class="string">&#x27;relu&#x27;</span>)(encoded)</span><br><span class="line">encoded = Dense(<span class="number">10</span>, activation=<span class="string">&#x27;sigmoid&#x27;</span>)(encoded)</span><br><span class="line"></span><br><span class="line"><span class="comment"># &quot;decoded&quot; is the lossy reconstruction of the input</span></span><br><span class="line">decoded = Dense(<span class="number">2000</span>, activation=<span class="string">&#x27;relu&#x27;</span>)(encoded)</span><br><span class="line">decoded = Dense(<span class="number">500</span>, activation=<span class="string">&#x27;relu&#x27;</span>)(decoded)</span><br><span class="line">decoded = Dense(<span class="number">500</span>, activation=<span class="string">&#x27;relu&#x27;</span>)(decoded)</span><br><span class="line">decoded = Dense(<span class="number">784</span>)(decoded)</span><br><span class="line"></span><br><span class="line"><span class="comment"># this model maps an input to its reconstruction</span></span><br><span class="line">autoencoder = Model(input_images, decoded)</span><br><span class="line"></span><br><span class="line">autoencoder.summary()</span><br></pre></td></tr></table></figure>
+
+<p>Output:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">Model: &quot;functional_1&quot;</span><br><span class="line">_________________________________________________________________</span><br><span class="line">Layer (type)                 Output Shape              Param #   </span><br><span class="line">&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">input_1 (InputLayer)         [(None, 784)]             0         </span><br><span class="line">_________________________________________________________________</span><br><span class="line">dense (Dense)                (None, 500)               392500    </span><br><span class="line">_________________________________________________________________</span><br><span class="line">dense_1 (Dense)              (None, 500)               250500    </span><br><span class="line">_________________________________________________________________</span><br><span class="line">dense_2 (Dense)              (None, 2000)              1002000   </span><br><span class="line">_________________________________________________________________</span><br><span class="line">dense_3 (Dense)              (None, 10)                20010     </span><br><span class="line">_________________________________________________________________</span><br><span class="line">dense_4 (Dense)              (None, 2000)              22000     </span><br><span class="line">_________________________________________________________________</span><br><span class="line">dense_5 (Dense)              (None, 500)               1000500   </span><br><span class="line">_________________________________________________________________</span><br><span class="line">dense_6 (Dense)              (None, 500)               250500    </span><br><span class="line">_________________________________________________________________</span><br><span class="line">dense_7 (Dense)              (None, 784)               392784    </span><br><span class="line">&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line">Total params: 3,330,794</span><br><span class="line">Trainable params: 3,330,794</span><br><span class="line">Non-trainable params: 0</span><br><span class="line">_________________________________________________________________</span><br></pre></td></tr></table></figure>
+
+<h3 id="Deep-Embedded-Clustering-algorithm"><a href="#Deep-Embedded-Clustering-algorithm" class="headerlink" title="Deep Embedded Clustering algorithm"></a>Deep Embedded Clustering algorithm</h3><p>Optimiz the parameter related to clustering and DNN at the same time.</p>
+<p><img src="https://img2018.cnblogs.com/blog/377271/201810/377271-20181021223727573-1521567551.png"></p>
+
+    </div>
+
+    <div class="about">
+        <h1>About this Post</h1>
+        <p>This post is written by Zhijin Wu | 小垃圾, licensed under <a
+                target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc/4.0">CC BY-NC 4.0</a>.</p>
+    </div>
+</article>
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+            <div class="group">
+                <h4 class="title">Blog</h4>
+                
+                <a href="/" class="item" target="_blank">Blog</a>
+                
+                <a href="/archives" class="item" target="_blank">Archives</a>
+                
+                <a href="/friends" class="item" target="_blank">Friends</a>
+                
+                <a href="/projects" class="item" target="_blank">Projects</a>
+                
+                <a href="/about" class="item" target="_blank">About</a>
+                
+                <a href="/atom.xml" class="item" target="_blank">RSS</a>
+                
+            </div>
+            
+            <div class="group">
+                <h4 class="title">Projects</h4>
+                
+                <a href="https://github.com/transmister" class="item" target="_blank">Transmister</a>
+                
+                <a href="https://github.com/MrWillCom/css-and-js-windows-uwp-xaml-controls" class="item" target="_blank">CSS&amp;JS Windows UWP XAML Controls</a>
+                
+                <a href="https://github.com/MrWillCom/hexo-theme-cupertino" class="item" target="_blank">Theme Cupertino</a>
+                
+                <a href="https://github.com/MrWillCom/github-dark-mode" class="item" target="_blank">GitHub Dark Mode</a>
+                
+            </div>
+            
+            <div class="group">
+                <h4 class="title">Me</h4>
+                
+                <a href="https://github.com/MrWillCom" class="item" target="_blank">GitHub</a>
+                
+                <a href="https://codepen.io/mrwillcom" class="item" target="_blank">CodePen</a>
+                
+                <a href="https://www.patreon.com/MrWillCom" class="item" target="_blank">Patreon</a>
+                
+                <a href="mailto:mr.will.com@outlook.com" class="item" target="_blank">Email</a>
+                
+            </div>
+            
+        </div>
+        &copy; 2020 Zhijin Wu | 小垃圾<br />
+        Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+</footer>
+
+        
+<script src="/js/main.js"></script>
+
+    </body>
+</html>
